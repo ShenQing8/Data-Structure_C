@@ -3,6 +3,7 @@
 #include <queue>
 using namespace std;
 
+/*二叉树的节点*/
 struct TreeNode
 {
 	int val;
@@ -10,6 +11,16 @@ struct TreeNode
 	TreeNode* right;
 	TreeNode(int x) :val(x), left(nullptr), right(nullptr) {}
 };
+
+/* AVL 树节点类 */
+//struct TreeNode {
+//	int val{};          // 节点值
+//	int height = 0;     // 节点高度
+//	TreeNode* left{};   // 左子节点
+//	TreeNode* right{};  // 右子节点
+//	TreeNode() = default;
+//	explicit TreeNode(int x) : val(x) {}
+//};
 
 /*层序遍历*//* 时间复杂度：O(n)  空间复杂度：O(n)*/
 // 层序遍历本质上属于广度优先遍历（breadth-first traversal）
@@ -214,8 +225,8 @@ int main()
 
 	TreeNode* root = &n4;
 	insert(root, 2);
-	insert(root, 1);
 	insert(root, 3);
+	insert(root, 1);
 	insert(root, 6);
 	insert(root, 5);
 	insert(root, 7);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 /* AVL Ê÷½ÚµãÀà */
@@ -207,19 +208,19 @@ void remove(TreeNode* root, int val)
 	root = removeHelper(root, val);
 }
 
+TreeNode* buildAVLTree(vector<int>& inputNums)
+{
+	TreeNode* root = NULL;
+	for (int data : inputNums)
+		root = insertHelper(root, data);
+	return root;
+}
 
 /*AVL Ê÷*/
 int main()
 {
-	TreeNode* n1 = new TreeNode(2);
-	insert(n1, 1);
-	insert(n1, 3);
-	insert(n1, 4);
-	insert(n1, 5);
-	insert(n1, 6);
-	insert(n1, 7);
-	insert(n1, 8);
-	insert(n1, 9);
+	vector<int> inputNums = { 2,1,5,9,6,3,4,18,16,1,35,51,23 };
+	TreeNode* root = buildAVLTree(inputNums);
 
 	return 0;
 }

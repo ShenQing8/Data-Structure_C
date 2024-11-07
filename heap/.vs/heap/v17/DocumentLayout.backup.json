@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\github Code\\Data-Structure_C\\heap\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E3FB6B3C-0B56-4E67-A40C-3BA43D04D275}|Project1\\Project1.vcxproj|D:\\github Code\\Data-Structure_C\\heap\\Project1\\my_heap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E3FB6B3C-0B56-4E67-A40C-3BA43D04D275}|Project1\\Project1.vcxproj|solutionrelative:Project1\\my_heap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 330,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "my_heap.cpp",
+              "DocumentMoniker": "D:\\github Code\\Data-Structure_C\\heap\\Project1\\my_heap.cpp",
+              "RelativeDocumentMoniker": "Project1\\my_heap.cpp",
+              "ToolTip": "D:\\github Code\\Data-Structure_C\\heap\\Project1\\my_heap.cpp",
+              "RelativeToolTip": "Project1\\my_heap.cpp",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAAwIMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-07T09:16:59.729Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

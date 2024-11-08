@@ -116,7 +116,6 @@ priority_queue<int, vector<int>, greater<int>> topkHeap(vector<int>& nums,int k)
 			ret.push(nums[i]);
 		}
 	return ret;
-
 }
 void topK()
 {

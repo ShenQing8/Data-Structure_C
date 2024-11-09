@@ -95,6 +95,91 @@ public:
 	}
 };
 
+/*邻接表*/
+struct Vertex
+{
+	// Vertex表示顶点，结构体内按需创建变量，此处以int类型举例
+	int k;
+	// 构造方法
+	Vertex(int x = 0) :k(x) {}
+};
+class GraphAdjList
+{
+private:
+	/*在 vector 中删除指定顶点*/
+	void remove(vector<Vertex*>& vertex, Vertex* vet)
+	{
+		for (int i = 0; i < vertex.size(); ++i)
+			if (vertex[i] == vet)
+			{
+				vertex.erase(vertex.begin() + i);
+				break;
+			}
+	}
+
+public:
+	// key：顶点，value：该顶点的所有邻接边
+	unordered_map<Vertex*, vector<Vertex*>> adjList;
+
+	/*构造方法*/
+	GraphAdjList() {}
+
+	/*获取顶点数量*/
+	int size()
+	{
+		return adjList.size();
+	}
+
+	/*添加顶点*/
+	void addVertex(Vertex* vet)
+	{
+		if (adjList.count(vet))
+			return;
+		adjList[vet] = vector<Vertex*>();
+	}
+
+	/*删除顶点*/
+	void removeVertex(Vertex* vet)
+	{
+		if(!adjList.count(vet))
+			throw invalid_argument("不存在顶点");
+		adjList.erase(vet);
+		// 遍历其他顶点，删除包含 vet 的边
+		for (auto& vertex : adjList)
+			remove(vertex.second, vet);
+	}
+
+	/*添加边*/
+	void addEdge(Vertex* vet1, Vertex* vet2)
+	{
+		if (!adjList.count(vet1) || !adjList.count(vet2) || vet1 == vet2)
+			throw invalid_argument("不存在顶点");
+		adjList[vet1].push_back(vet2);
+		adjList[vet2].push_back(vet1);
+	}
+
+	/*删除边*/
+	void removeEdge(Vertex* vet1, Vertex* vet2)
+	{
+		if (!adjList.count(vet1) || !adjList.count(vet2) || vet1 == vet2)
+			throw invalid_argument("不存在顶点");
+		remove(adjList[vet1], vet2);
+		remove(adjList[vet2], vet1);
+	}
+
+	/*打印*/
+	void print()
+	{
+		for (auto& vertex : adjList)
+		{
+			cout << vertex.first->k << ": ";
+			for (int i = 0; i < vertex.second.size(); ++i)
+				cout << vertex.second[i]->k << "  ";
+			cout << '\n';
+		}
+	}
+};
+
 int main()
 {
 	vector<int> vertices = { 1,2,3,4,5,6 };
@@ -105,6 +190,24 @@ int main()
 	GraphAdjMat adj(vertices, adjMat);
 	adj.addEdge(2, 3);
 	adj.print();
+
+	GraphAdjList adjList;
+	Vertex v1(1);
+	Vertex v2(2);
+	Vertex v3(3);
+	adjList.addVertex(&v1);
+	adjList.addVertex(&v2);
+	adjList.addVertex(&v3);
+
+	adjList.addEdge(&v1, &v2);
+	adjList.addEdge(&v1, &v3);
+	adjList.addEdge(&v2, &v3);
+
+	adjList.print();
+
+	adjList.removeEdge(&v2, &v3);
+	adjList.removeVertex(&v1);
+	
 
 	return 0;
 }

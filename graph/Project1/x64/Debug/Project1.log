@@ -1,3 +1,4 @@
 ﻿  myGraph.cpp
-D:\github Code\Data-Structure_C\graph\Project1\myGraph.cpp(22,23): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+D:\github Code\Data-Structure_C\graph\Project1\myGraph.cpp(23,23): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+D:\github Code\Data-Structure_C\graph\Project1\myGraph.cpp(130,22): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
   Project1.vcxproj -> D:\github Code\Data-Structure_C\graph\x64\Debug\Project1.exe

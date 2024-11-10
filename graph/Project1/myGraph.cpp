@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 /*基于邻接矩阵实现图*/
@@ -180,30 +182,99 @@ public:
 	}
 };
 
+/*以邻接表为例进行遍历*/
+/*广度优先遍历*/
+vector<Vertex*> graphBFS(GraphAdjList& graphList, Vertex* startVertex)
+{
+	vector<Vertex*> ret = { startVertex };
+	unordered_set<Vertex*> visited = { startVertex };// 用来记录已访问过的顶点
+	queue<Vertex*> que;// 用来存储需要访问的节点
+	que.push(startVertex);
+	while (!que.empty())
+	{
+		for (Vertex* ver : graphList.adjList[que.front()])
+		{
+			if (visited.find(ver) == visited.end())
+			{
+				que.push(ver);// 记录还需要访问的顶点
+				visited.emplace(ver);// 记录访问过的顶点
+				ret.emplace_back(ver);// 记录访问到的顶点
+			}
+		}
+		que.pop();
+	}
+	return ret;
+}
+/*深度优先遍历*/
+void dfs(GraphAdjList& graph, Vertex* vet, vector<Vertex*>& ret, unordered_set<Vertex*>& visited)
+{
+	ret.emplace_back(vet);
+	visited.emplace(vet);
+	for (Vertex* ver : graph.adjList[vet])
+	{
+		if (visited.find(ver) == visited.end())
+		{
+			dfs(graph, ver, ret, visited);
+		}
+	}
+}
+vector<Vertex*> graphDFS(GraphAdjList& graph, Vertex* startVertex)
+{
+	vector<Vertex*> ret;// 顶点遍历序列
+	unordered_set<Vertex*> visited;// 记录访问过的顶点
+	// 递归遍历顶点
+	dfs(graph, startVertex, ret, visited);
+	return ret;
+}
+
 int main()
 {
-	vector<int> vertices = { 1,2,3,4,5,6 };
-	vector<vector<bool>> adjMat;/* (6, vector<bool>(6, 0));*/
-	//adjMat[1][2] = 1;
-	//adjMat[2][1] = 1;
+	//vector<int> vertices = { 1,2,3,4,5,6 };
+	//vector<vector<bool>> adjMat;/* (6, vector<bool>(6, 0));*/
+	////adjMat[1][2] = 1;
+	////adjMat[2][1] = 1;
 
-	GraphAdjMat adj(vertices, adjMat);
-	adj.addEdge(2, 3);
-	adj.print();
+	//GraphAdjMat adj(vertices, adjMat);
+	//adj.addEdge(2, 3);
+	//adj.print();
 
 	GraphAdjList adjList;
 	Vertex v1(1);
 	Vertex v2(2);
 	Vertex v3(3);
+	Vertex v4(4);
+	Vertex v5(5);
+	Vertex v6(6);
+	Vertex v7(7);
+	Vertex v8(8);
+	Vertex v9(9);
+
 	adjList.addVertex(&v1);
 	adjList.addVertex(&v2);
 	adjList.addVertex(&v3);
+	adjList.addVertex(&v4);
+	adjList.addVertex(&v5);
+	adjList.addVertex(&v6);
+	adjList.addVertex(&v7);
+	adjList.addVertex(&v8);
+	adjList.addVertex(&v9);
 
 	adjList.addEdge(&v1, &v2);
 	adjList.addEdge(&v1, &v3);
-	adjList.addEdge(&v2, &v3);
+	adjList.addEdge(&v2, &v4);
+	adjList.addEdge(&v2, &v5);
+	adjList.addEdge(&v3, &v5);
+	adjList.addEdge(&v3, &v6);
+	adjList.addEdge(&v4, &v7);
+	adjList.addEdge(&v5, &v7);
+	adjList.addEdge(&v5, &v8);
+	adjList.addEdge(&v6, &v8);
+	adjList.addEdge(&v7, &v9);
+	adjList.addEdge(&v8, &v9);
 
 	adjList.print();
+	vector<Vertex*> bfs = graphBFS(adjList, &v1);
+	vector<Vertex*> dfs = graphDFS(adjList, &v1);
 
 	adjList.removeEdge(&v2, &v3);
 	adjList.removeVertex(&v1);

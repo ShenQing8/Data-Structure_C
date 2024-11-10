@@ -12,6 +12,8 @@ public:
 	vector<int> vertices;       // 顶点列表，元素代表“顶点值”，索引代表“顶点索引”
 	vector<vector<bool>> adjMat; // 邻接矩阵，行列索引对应“顶点索引”
 
+	/*构造方法*/
+	GraphAdjMat() {}
 	GraphAdjMat(vector<int>& vet, vector<vector<bool>>& edges)
 	{
 		// 添加顶点
@@ -125,6 +127,15 @@ public:
 
 	/*构造方法*/
 	GraphAdjList() {}
+	GraphAdjList(vector<vector<Vertex*>> edge)
+	{
+		for (vector<Vertex*>& tmp : edge)
+		{
+			addVertex(tmp[0]);
+			addVertex(tmp[1]);
+			addEdge(tmp[0], tmp[1]);
+		}
+	}
 
 	/*获取顶点数量*/
 	int size()
@@ -237,6 +248,8 @@ int main()
 	//GraphAdjMat adj(vertices, adjMat);
 	//adj.addEdge(2, 3);
 	//adj.print();
+
+	/*vector<Vertex*> v = valsToVets(vector<int>{1, 3, 2, 5, 4});*/
 
 	GraphAdjList adjList;
 	Vertex v1(1);

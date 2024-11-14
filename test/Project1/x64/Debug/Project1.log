@@ -1,3 +1,8 @@
 ﻿  test.cpp
-D:\github Code\Data-Structure_C\test\Project1\test.cpp(37,19): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(74,19): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(99,39): warning C4267: “=”: 从“size_t”转换到“_Ty”，可能丢失数据
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(99,39): warning C4267:         with
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(99,39): warning C4267:         [
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(99,39): warning C4267:             _Ty=int
+D:\github Code\Data-Structure_C\test\Project1\test.cpp(99,39): warning C4267:         ]
   Project1.vcxproj -> D:\github Code\Data-Structure_C\test\x64\Debug\Project1.exe

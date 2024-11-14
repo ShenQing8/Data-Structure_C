@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <ranges>
 using namespace std;
 
 //class Solution
@@ -103,36 +104,53 @@ using namespace std;
 //    }
 //};
 
-class RangeFreqQuery
+//class RangeFreqQuery
+//{
+//public:
+//    unordered_map<int, vector<int>> num_map;
+//    RangeFreqQuery(vector<int>& arr)
+//    {
+//        for (int i = 0; i < arr.size(); ++i)
+//            num_map[arr[i]].emplace_back(i);
+//    }
+//    int bin_search(vector<int>& arr, int target)
+//    {
+//        int left = 0;
+//        int right = arr.size() - 1;
+//        while (left <= right)
+//        {
+//            int mid = left + (right - left) / 2;
+//            if (arr[mid] < target)
+//                left = mid + 1;
+//            else
+//                right = mid - 1;
+//        }
+//        return left;
+//    }
+//    int query(int left, int right, int value)
+//    {
+//        int l = bin_search(num_map[value], left);
+//        if (l >= num_map[value].size())
+//            return 0;
+//        int r = bin_search(num_map[value], right + 1);
+//        return r - l;
+//    }
+//};
+
+class Solution
 {
 public:
-    unordered_map<int, vector<int>> num_map;
-    RangeFreqQuery(vector<int>& arr)
+    long long countFairPairs(vector<int>& nums, int lower, int upper)
     {
-        for (int i = 0; i < arr.size(); ++i)
-            num_map[arr[i]].emplace_back(i);
-    }
-    int bin_search(vector<int>& arr, int target)
-    {
-        int left = 0;
-        int right = arr.size() - 1;
-        while (left <= right)
+        sort(nums.begin(), nums.end());
+        long long count = 0;
+        for (int i = 0; i < nums.size(); ++i)
         {
-            int mid = left + (right - left) / 2;
-            if (arr[mid] < target)
-                left = mid + 1;
-            else
-                right = mid - 1;
+            auto r = upper_bound(nums.begin(), nums.begin() + i, upper - nums[i]);
+            auto l = lower_bound(nums.begin(), nums.begin() + i, lower - nums[i]);
+            count += r - l;
         }
-        return left;
-    }
-    int query(int left, int right, int value)
-    {
-        int l = bin_search(num_map[value], left);
-        if (l >= num_map[value].size())
-            return 0;
-        int r = bin_search(num_map[value], right + 1);
-        return r - l;
+        return count;
     }
 };
 
@@ -150,6 +168,10 @@ int main()
     //vector<string> words = { "aaabbb","aab","babbab","babbbb","b","bbbbbbbbab","a","bbbbbbbbbb","baaabbaab","aa" };
     //Solution sl;
     //sl.numSmallerByFrequency(queries, words);
+
+    // 第四个测试省略
+
+
 
 	return 0;
 }

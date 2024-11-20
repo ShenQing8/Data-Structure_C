@@ -158,6 +158,32 @@ void bucketSort(vector<float> &nums)
     }
 }
 
+/*计数排序*/
+void countingSort(vector<int>& nums)
+{
+    // 找出最大的数m
+    int m = 0;
+    for(int num: nums)
+        m = num > m ? num : m;
+    // 创建容量为m+1的数组，并统计前缀
+    vector<int> counter(m+1, 0);
+    for(int num: nums)
+        ++counter[num];
+    // 统计前缀和
+    for(int i = 0; i < m+1; ++i)
+        counter[i+1] += counter[i];
+    // 倒叙遍历数组，将元素填入res中
+    int n = nums.size();
+    vector<int> res(n);
+    for(int i = n-1; i >=0; --i)
+    {
+        res[counter[nums[i]] - 1] = nums[i];
+        --counter[nums[i]];
+    }
+    // 排序后的数组覆盖原数组
+    nums = res;
+}
+
 
 
 int main()
@@ -181,6 +207,10 @@ int main()
     /*桶排序*/
     vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
     bucketSort(buc_nums);
+
+    /*计数排序*/
+    vector<int> coun_nums = {2,3,5,1,6,8,9,4,8,5,6,15,13};
+    countingSort(coun_nums);
 
     return 0;
 }

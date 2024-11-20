@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <unordered_map>
 using namespace std;
 
 /*插入排序*/
@@ -88,6 +90,76 @@ void mergeSort(vector<int>& nums, int left, int right)
     merge(nums, left, mid, right);
 }
 
+/*堆排序*/
+void siftDown(vector<int>& nums, int n, int i)// 从堆顶至底堆化
+{
+    while(1)
+    {
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        int ma = i;
+        if(l < n && nums[l] > nums[ma])
+            ma = l;
+        if(r < n && nums[r] > nums[ma])
+            ma = r;
+        
+        if(i == ma)
+            break;
+        
+        swap(nums[i], nums[ma]);
+        i = ma;
+    }
+}
+void heapSort(vector<int>& nums)// 大顶堆
+{
+    int n = nums.size();// 未排序数组的长度
+    for(int i = n / 2 - 1; i >= 0; --i)// 将原数组堆化为大顶堆
+    {
+        siftDown(nums, n, i);
+    }
+    while(n > 1)
+    {
+        swap(nums[0], nums[n - 1]);
+        --n;
+        siftDown(nums, n, 0);
+    }
+}
+// 上述几种排序算法都属于“基于比较的排序算法”，它们通过比较元素间的大小来实现排序。此类排序算法的时间复杂度无法超越 O(nlog(n))
+// 下面，我们将探讨几种“非比较排序算法”，它们的时间复杂度可以达到线性阶。
+
+/*桶排序*/
+// 桶排序适用于处理体量很大的数据。
+// 例如，输入数据包含 100 万个元素，由于空间限制，系统内存无法一次性加载所有数据。
+// 此时，可以将数据分成 1000 个桶，然后分别对每个桶进行排序，最后将结果合并。
+void bucketSort(vector<float> &nums)
+{// 假设所有数据的输入范围为[0,1)
+    int k = nums.size() / 2;// 定义 k 个桶，理想情况为每个桶有两个数据
+    vector<vector<float>> buckets(k);
+    // 1、将元素分配到各个桶中
+    for(float val: nums)
+    {
+        // 输入范围为[0,1)，则val * k可映射到[0,k-1]的桶中
+        int i = val * k;
+        buckets[i].emplace_back(val);
+    }
+    // 2、排序每个桶中的元素
+    for(vector<float>& bucket: buckets)
+    {
+        sort(bucket.begin(), bucket.end());
+    }
+    // 3、合并每个桶
+    int i = 0;
+    for(vector<float>& bucket: buckets)
+    {
+        for (float val: bucket)
+        {
+            nums[i++] = val;
+        }
+    }
+}
+
+
+
 int main()
 {
     vector<int> nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
@@ -101,6 +173,14 @@ int main()
     /*归并排序*/
     nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
     mergeSort(nums, 0, nums.size()-1);
+
+    /*堆排序*/
+    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+    heapSort(nums);
+
+    /*桶排序*/
+    vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
+    bucketSort(buc_nums);
 
     return 0;
 }

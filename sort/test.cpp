@@ -159,6 +159,8 @@ void bucketSort(vector<float> &nums)
 }
 
 /*计数排序*/
+// 1、只适用于非负整数。若想将其用于其他类型的数据，需要确保这些数据可以转换为非负整数，并且在转换过程中不能改变各个元素之间的相对大小关系
+// 2、适用于数据量大但数据范围小的情况
 void countingSort(vector<int>& nums)
 {
     // 找出最大的数m
@@ -170,8 +172,8 @@ void countingSort(vector<int>& nums)
     for(int num: nums)
         ++counter[num];
     // 统计前缀和
-    for(int i = 0; i < m+1; ++i)
-        counter[i+1] += counter[i];
+    for(int i = 1; i < m+1; ++i)
+        counter[i] += counter[i-1];
     // 倒叙遍历数组，将元素填入res中
     int n = nums.size();
     vector<int> res(n);
@@ -184,33 +186,80 @@ void countingSort(vector<int>& nums)
     nums = res;
 }
 
+/*基数排序*/ // 以十进制数为例
+// 得到当前位的数：(num/(d^k-1))%d
+// d位进制数，k为位数
+int digit(int num, int exp) // exp = 10^(k-1)
+{
+    return (num / exp) % 10;
+}
+void countingSortDigit(vector<int>& nums, int exp)
+{
+    // 由于是十进制数，所以最大数是9
+    vector<int> counter(10, 0);
+    for (int num : nums)
+    {
+        int n = digit(num, exp);
+        ++counter[n];
+    }
+    // 计算前缀和
+    for (int i = 1; i < 10; ++i)
+        counter[i] += counter[i - 1];
+    // 倒序遍历师数组
+    int n = nums.size();
+    vector<int> res(n);
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int n = digit(nums[i], exp);
+        res[counter[n] - 1] = nums[i];
+        --counter[n];
+    }
+    // 排序后的数组覆盖原数组
+    nums = res;
+}
+void radixSort(vector<int>& nums)
+{
+    // 获取数组中的最大元素
+    int m = *max_element(nums.begin(), nums.end());
+    // 从个位一直排序到最高位
+    for (int exp = 1; exp <= m; exp *= 10)
+    {
+        // 按第 i 位数排序
+        countingSortDigit(nums, exp);
+    }
+}
+
 
 
 int main()
 {
-    vector<int> nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-    /*插入排序*/
-    insertionSort(nums);
+//    vector<int> nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+//    /*插入排序*/
+//    insertionSort(nums);
+//
+//    /*快排*/
+//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+//    quicksort(nums, 0, nums.size()-1);
+//
+//    /*归并排序*/
+//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+//    mergeSort(nums, 0, nums.size()-1);
+//
+//    /*堆排序*/
+//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+//    heapSort(nums);
+//
+//    /*桶排序*/
+//    vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
+//    bucketSort(buc_nums);
+//
+//    /*计数排序*/
+//    vector<int> coun_nums = {2,3,5,1,6,8,9,4,8,5,6,15,13};
+//    countingSort(coun_nums);
 
-    /*快排*/
-    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-    quicksort(nums, 0, nums.size()-1);
-
-    /*归并排序*/
-    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-    mergeSort(nums, 0, nums.size()-1);
-
-    /*堆排序*/
-    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-    heapSort(nums);
-
-    /*桶排序*/
-    vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
-    bucketSort(buc_nums);
-
-    /*计数排序*/
-    vector<int> coun_nums = {2,3,5,1,6,8,9,4,8,5,6,15,13};
-    countingSort(coun_nums);
+    /*基数排序*/
+    vector<int> rad_nums = {202312345, 202313526, 202366789, 2134, 56789, 999999};
+    radixSort(rad_nums);
 
     return 0;
 }

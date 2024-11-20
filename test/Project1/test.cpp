@@ -154,6 +154,46 @@ public:
     }
 };
 
+int digit(int num, int exp) // exp = 10^(k-1)
+{
+    return (num / exp) % 10;
+}
+void countingSortDigit(vector<int>& nums, int exp)
+{
+    // 由于是十进制数，所以最大数是9
+    vector<int> counter(10, 0);
+    for (int num : nums)
+    {
+        int n = digit(num, exp);
+        ++counter[n];
+    }
+    // 计算前缀和
+    for (int i = 1; i < 10; ++i)
+        counter[i] += counter[i - 1];
+    // 倒序遍历师数组
+    int n = nums.size();
+    vector<int> res(n);
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int n = digit(nums[i], exp);
+        res[counter[n] - 1] = nums[i];
+        --counter[n];
+    }
+    // 排序后的数组覆盖原数组
+    nums = res;
+}
+void radixSort(vector<int>& nums)
+{
+    // 获取数组中的最大元素
+    int m = *max_element(nums.begin(), nums.end());
+    // 从个位一直排序到最高位
+    for (int exp = 1; exp <= m; exp *= 10)
+    {
+        // 按第 i 位数排序
+        countingSortDigit(nums, exp);
+    }
+}
+
 int main()
 {
     //string s = "ibpbhixfiouhdljnjfflpapptrxgcomvnb";
@@ -171,7 +211,8 @@ int main()
 
     // 第四个测试省略
 
-
+    vector<int> rad_nums = { 202312345, 202313526, 202366789, 2134, 56789, 999999 };
+    radixSort(rad_nums);
 
 	return 0;
 }

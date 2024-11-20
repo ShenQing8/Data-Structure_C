@@ -13,7 +13,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 330,
+          "DockedWidth": 335,
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -22,9 +22,9 @@
               "Title": "test.cpp",
               "DocumentMoniker": "D:\\github Code\\Data-Structure_C\\test\\Project1\\test.cpp",
               "RelativeDocumentMoniker": "Project1\\test.cpp",
-              "ToolTip": "D:\\github Code\\Data-Structure_C\\test\\Project1\\test.cpp",
-              "RelativeToolTip": "Project1\\test.cpp",
-              "ViewState": "AgIAAIEAAAAAAAAAAAAAAIkAAAAEAAAAAAAAAA==",
+              "ToolTip": "D:\\github Code\\Data-Structure_C\\test\\Project1\\test.cpp*",
+              "RelativeToolTip": "Project1\\test.cpp*",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAvwJsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-11-12T11:13:52.821Z",
               "EditorCaption": ""

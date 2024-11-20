@@ -30,11 +30,8 @@ void medianThree(vector<int>& nums, int left, int right)
         swap(nums[right], nums[left]);// nums[right]在中间
     return;
 }
-void quicksort(vector<int>& nums, int left, int right)
+int partion(vector<int>& nums, int left, int right)
 {
-    if(left >= right)// 当数组长度小于等于 1 时，不用排序
-        return;
-    medianThree(nums, left, right);// 基准数优化，减小排序算法时间复杂度劣化至O(n^2)的概率
     int i = left;
     int j = right;
     while(i < j)
@@ -47,8 +44,26 @@ void quicksort(vector<int>& nums, int left, int right)
     }
     swap(nums[left], nums[i]);
 
-    quicksort(nums, left, i - 1);// 继续排序左边
-    quicksort(nums, i + 1, right);// 继续排序右边
+    return i;
+}
+void quicksort(vector<int>& nums, int left, int right)
+{
+    while(left < right)
+    {
+        medianThree(nums, left, right);// 基准数优化，减小排序算法时间复杂度劣化至O(n^2)的概率
+        int pivot = partion(nums, left, right);
+        // 尾递归优化，使递归深度最差位O(logn)
+        if(pivot - left < right - pivot)
+        {
+            quicksort(nums, left, pivot);// 排序左边
+            left = pivot + 1;
+        }
+        else
+        {
+            quicksort(nums, pivot + 1, right);// 排序右边
+            right = pivot - 1;
+        }
+    }
 }
 
 /*归并排序*/
@@ -233,29 +248,29 @@ void radixSort(vector<int>& nums)
 
 int main()
 {
-//    vector<int> nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-//    /*插入排序*/
-//    insertionSort(nums);
-//
-//    /*快排*/
-//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-//    quicksort(nums, 0, nums.size()-1);
-//
-//    /*归并排序*/
-//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-//    mergeSort(nums, 0, nums.size()-1);
-//
-//    /*堆排序*/
-//    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
-//    heapSort(nums);
-//
-//    /*桶排序*/
-//    vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
-//    bucketSort(buc_nums);
-//
-//    /*计数排序*/
-//    vector<int> coun_nums = {2,3,5,1,6,8,9,4,8,5,6,15,13};
-//    countingSort(coun_nums);
+    vector<int> nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+    /*插入排序*/
+    insertionSort(nums);
+
+    /*快排*/
+    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+    quicksort(nums, 0, nums.size()-1);
+
+    /*归并排序*/
+    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+    mergeSort(nums, 0, nums.size()-1);
+
+    /*堆排序*/
+    nums = {16,4,3,5,6,7,9,4,56,54,82,95,46,78};
+    heapSort(nums);
+
+    /*桶排序*/
+    vector<float> buc_nums = {0.1, 0.02, 0.34, 0.78, 0.16, 0.99, 0.45, 0.46, 0.55};
+    bucketSort(buc_nums);
+
+    /*计数排序*/
+    vector<int> coun_nums = {2,3,5,1,6,8,9,4,8,5,6,15,13};
+    countingSort(coun_nums);
 
     /*基数排序*/
     vector<int> rad_nums = {202312345, 202313526, 202366789, 2134, 56789, 999999};

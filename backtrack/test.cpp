@@ -2,17 +2,16 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+// #include "../AVL_tree/Project1/AVLtree.h"
 using namespace std;
 
-struct TreeNode
-{
-    int val;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode():left(nullptr), right(nullptr){}
-    TreeNode(int a):val(a), left(nullptr), right(nullptr){}
+struct TreeNode {
+	int val{};
+	TreeNode* left{};
+	TreeNode* right{};
+	TreeNode() = default;
+	explicit TreeNode(int x) : val(x) {}
 };
-
 
 /*回溯算法框架*/
 // 在以下框架代码中，state 表示问题的当前状态，choices 表示当前状态下可以做出的选择
@@ -92,6 +91,25 @@ void backtrack_schNode(vector<TreeNode*>& state, vector<TreeNode*>& choices, vec
 
 int main()
 {
-    
+    TreeNode n1(1);
+    TreeNode n2(7);
+    TreeNode n3(3);
+    n1.left = &n2;
+    n1.right = &n3;
+    TreeNode n4(4);
+    TreeNode n5(5);
+    n2.left = &n4;
+    n2.right = &n5;
+    TreeNode n6(6);
+    TreeNode n7(7);
+    n3.left = &n6;
+    n3.right = &n7;
+    TreeNode n8(7);
+    n4.left = &n8;
+    vector<TreeNode*> state;
+    vector<TreeNode*> choices = {&n1};
+    vector<vector<TreeNode*>> res;
+    backtrack_schNode(state, choices, res);
+
     return 0;
 }

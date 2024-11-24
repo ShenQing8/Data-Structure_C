@@ -13,7 +13,7 @@ struct TreeNode
     TreeNode(int a):val(a), left(nullptr), right(nullptr){}
 };
 
-/*构建树*/
+/*根据前序和中序遍历构建树*/
 TreeNode* dfsTree(vector<int> &preorder, unordered_map<int, int> inordermap, int i, int l, int r)
 {
     // 当节点数不足 1 时，返回空指针

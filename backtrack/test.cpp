@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 // #include "../AVL_tree/Project1/AVLtree.h"
 using namespace std;
 
@@ -89,27 +90,150 @@ void backtrack_schNode(vector<TreeNode*>& state, vector<TreeNode*>& choices, vec
     }
 }
 
+/*全排列Ⅰ：无重复元素*/
+void backtrack_pl1(vector<int>& state, vector<int>& choices, vector<bool>& selected, vector<vector<int>>& res)
+{
+    // 判断是否为解
+    if(state.size() == choices.size())
+    {
+        res.emplace_back(state);
+        return;
+    }
+    // 遍历所有选择
+    for(int i = 0; i < choices.size(); ++i)
+    {
+        // 剪枝
+        if(!selected[i])
+        {
+            // 尝试
+            selected[i] = true;
+            state.emplace_back(choices[i]);
+            // 继续下一轮循环
+            backtrack_pl1(state, choices, selected, res);
+            // 回溯
+            selected[i] = false;
+            state.pop_back();
+        }
+    }
+}
+vector<vector<int>> permutations1(vector<int> &nums)
+{
+    vector<int> state;
+    vector<bool> selected(nums.size(), false);
+    vector<vector<int>> res;
+    backtrack_pl1(state, nums, selected, res);
+    return res;
+}
+
+
+
+/*全排列Ⅱ：有重复元素*/
+void backtrack_pl2(vector<int>& state, vector<int>& choices, vector<bool>& selected, vector<vector<int>>& res)
+{
+    // 判断是否为解
+    if(state.size() == choices.size())
+    {
+        res.emplace_back(state);
+        return;
+    }
+    // 遍历所有选择
+    unordered_set<int> duplicated;
+    for(int i = 0; i < choices.size(); ++i)
+    {
+        // 剪枝
+        if(!selected[i] && duplicated.find(choices[i]) == duplicated.end())
+        {
+            // 尝试
+            selected[i] = true;
+            duplicated.emplace(choices[i]);
+            state.emplace_back(choices[i]);
+            // 继续下一轮循环
+            backtrack_pl2(state, choices, selected, res);
+            // 回溯
+            selected[i] = false;
+            state.pop_back();
+        }
+    }
+}
+vector<vector<int>> permutations2(vector<int> &nums)
+{
+    vector<int> state;
+    vector<bool> selected(nums.size(), false);
+    vector<vector<int>> res;
+    backtrack_pl2(state, nums, selected, res);
+    return res;
+}
+
+
+
+/*子集和：无重复元素*/
+void backtrack_zj1(vector<int>& state, vector<int>& choices, vector<vector<int>>& res, int start, int target)
+{
+    // 判断是否为解
+    if(target == 0)
+    {
+        res.emplace_back(state);
+        return;
+    }
+    // 遍历所有选择
+    // 剪枝1：从start开始遍历，避免重复数组
+    for(int i = start; i < choices.size(); ++i)
+    {
+        // 剪枝2：若子集超过target，则不再继续
+        if(target - choices[i] >= 0)
+        {
+            // 尝试
+            state.emplace_back(choices[i]);
+            // 进行下一轮循环
+            backtrack_zj1(state, choices, res, i, target - choices[i]);
+            // 回溯
+            state.pop_back();
+        }
+    }
+}
+vector<vector<int>> subsetSumINaive(vector<int>& nums, int target)
+{
+    vector<int> state;
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> res;
+    int start = 0;
+    backtrack_zj1(state, nums, res, start, target);
+    return res;
+}
+
+
+
 int main()
 {
-    TreeNode n1(1);
-    TreeNode n2(7);
-    TreeNode n3(3);
-    n1.left = &n2;
-    n1.right = &n3;
-    TreeNode n4(4);
-    TreeNode n5(5);
-    n2.left = &n4;
-    n2.right = &n5;
-    TreeNode n6(6);
-    TreeNode n7(7);
-    n3.left = &n6;
-    n3.right = &n7;
-    TreeNode n8(7);
-    n4.left = &n8;
-    vector<TreeNode*> state;
-    vector<TreeNode*> choices = {&n1};
-    vector<vector<TreeNode*>> res;
-    backtrack_schNode(state, choices, res);
+    // TreeNode n1(1);
+    // TreeNode n2(7);
+    // TreeNode n3(3);
+    // n1.left = &n2;
+    // n1.right = &n3;
+    // TreeNode n4(4);
+    // TreeNode n5(5);
+    // n2.left = &n4;
+    // n2.right = &n5;
+    // TreeNode n6(6);
+    // TreeNode n7(7);
+    // n3.left = &n6;
+    // n3.right = &n7;
+    // TreeNode n8(7);
+    // n4.left = &n8;
+    // vector<TreeNode*> state;
+    // vector<TreeNode*> choices = {&n1};
+    // vector<vector<TreeNode*>> res;
+    // backtrack_schNode(state, choices, res);
+
+    /*全排列Ⅰ：无重复元素*/
+    vector<int> pl_nums1 = {1,2,3};
+    vector<vector<int>> pl_res1 = permutations1(pl_nums1);
+
+    vector<int> pl_nums2 = {1,3,2,3};
+    vector<vector<int>> pl_res2 = permutations2(pl_nums2);
+
+    vector<int> zj_nums1 = {3,4,5};
+    vector<vector<int>> zj_res1 = subsetSumINaive(zj_nums1, 9);
 
     return 0;
 }

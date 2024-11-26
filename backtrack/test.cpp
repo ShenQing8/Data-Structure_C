@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
@@ -224,7 +225,8 @@ void backtrack_zj2(vector<int>& state, vector<int>& choices, vector<vector<int>>
         // 尝试
         state.emplace_back(choices[i]);
         // 进行下一轮循环
-        backtrack_zj2(state, choices, res, i, target - choices[i]);
+        // 剪枝Ⅳ：（i + 1 操作）不允许重复选择同一元素
+        backtrack_zj2(state, choices, res, i + 1, target - choices[i]);
         // 回溯
         state.pop_back();
     }
@@ -237,6 +239,65 @@ vector<vector<int>> subsetSumINaive2(vector<int>& nums, int target)
     vector<vector<int>> res;
     backtrack_zj2(state, nums, res, start, target);
     return res;
+}
+
+
+/*N皇后问题*/
+void backtrack_nQueens(vector<vector<string>>& state, vector<vector<vector<string>>>& res, vector<bool>& cols, 
+vector<bool>& digs1, vector<bool>& digs2, int row, int n)
+{
+    // 判断是否为解
+    if(row == n)
+    {
+        res.emplace_back(state);
+        return;
+    }
+    // 遍历所有选择
+    for(int i = 0; i < n; ++i)// i为列， row为行
+    {
+        // 剪枝
+        if(cols[i] || digs1[row - i + n - 1] || digs2[row + i])
+            continue;
+        // 尝试
+        state[row][i] = "Q";
+        cols[i] = digs1[row - i + n - 1] = digs2[row + i] = true;
+        // 进行下一轮循环
+        backtrack_nQueens(state, res, cols, digs1, digs2, row + 1, n);
+        // 回溯
+        state[row][i] = "#";
+        cols[i] = digs1[row - i + n - 1] = digs2[row + i] = false;
+    }
+}
+vector<vector<vector<string>>> nQueens(int n)
+{
+    // 初始化棋盘：‘Q’代表皇后，‘#’代表棋盘
+    vector<vector<string>> state(n, vector<string>(n, "#"));
+    vector<bool> cols(n, false);// 列
+    vector<bool> digs1(2 * n - 1, false);// row - col = k 的对角线
+    vector<bool> digs2(2 * n - 1, false);// row + col = k 的对角线
+    vector<vector<vector<string>>> res;
+    backtrack_nQueens(state, res, cols, digs1, digs2, 0, n);
+    return res;
+}
+void print_chessboard(vector<vector<vector<string>>>& board)
+{
+    int n = board.size();// 层数
+    int m = board[0].size();// 行、列数
+    for(int i = 0; i < n; ++i)
+    {
+        // 打印一层
+        for(int r = 0; r < m; ++r)
+        {
+            // 打印一行
+            for(int c = 0; c < m; ++c)
+            {
+                // 打印此行中的 c 列
+                cout << board[i][r][c] << ' ';
+            }
+            cout << endl;
+        }
+        cout << "\n\n";
+    }
 }
 
 
@@ -278,6 +339,10 @@ int main()
     /*子集和Ⅱ：有重复元素*/
     vector<int> zj_nums2 = {4,4,5,3};
     vector<vector<int>> zj_res2 = subsetSumINaive2(zj_nums2, 9);
+
+    /*N皇后问题*/
+    vector<vector<vector<string>>> nQ_res = nQueens(4);
+    print_chessboard(nQ_res);
 
     return 0;
 }

@@ -166,7 +166,7 @@ vector<vector<int>> permutations2(vector<int> &nums)
 
 
 
-/*子集和：无重复元素*/
+/*子集和Ⅰ：无重复元素*/
 void backtrack_zj1(vector<int>& state, vector<int>& choices, vector<vector<int>>& res, int start, int target)
 {
     // 判断是否为解
@@ -180,24 +180,62 @@ void backtrack_zj1(vector<int>& state, vector<int>& choices, vector<vector<int>>
     for(int i = start; i < choices.size(); ++i)
     {
         // 剪枝2：若子集超过target，则不再继续
-        if(target - choices[i] >= 0)
-        {
-            // 尝试
-            state.emplace_back(choices[i]);
-            // 进行下一轮循环
-            backtrack_zj1(state, choices, res, i, target - choices[i]);
-            // 回溯
-            state.pop_back();
-        }
+        if(target - choices[i] < 0)
+            break;
+        
+        // 尝试
+        state.emplace_back(choices[i]);
+        // 进行下一轮循环
+        backtrack_zj1(state, choices, res, i, target - choices[i]);
+        // 回溯
+        state.pop_back();
     }
 }
-vector<vector<int>> subsetSumINaive(vector<int>& nums, int target)
+vector<vector<int>> subsetSumINaive1(vector<int>& nums, int target)
 {
     vector<int> state;
     sort(nums.begin(), nums.end());
     vector<vector<int>> res;
     int start = 0;
     backtrack_zj1(state, nums, res, start, target);
+    return res;
+}
+
+
+/*子集和Ⅱ：有重复元素*/
+void backtrack_zj2(vector<int>& state, vector<int>& choices, vector<vector<int>>& res, int start, int target)
+{
+    // 判断是否为解
+    if(target == 0)
+    {
+        res.emplace_back(state);
+        return;
+    }
+    // 遍历所有选择, 剪枝Ⅰ：剪去顺序不同但元素相同的子集
+    for(int i = start; i < choices.size(); ++i)
+    {
+        // 剪枝Ⅱ：若子集超过target，则直接跳出循环
+        // 因为数组已经排过序，若当前已超过target，则之后必然也超过
+        if(target - choices[i] < 0)
+            break;
+        // 剪枝Ⅲ：剪去重复元素
+        if(i > start && choices[i] == choices[i-1])
+            continue;
+        // 尝试
+        state.emplace_back(choices[i]);
+        // 进行下一轮循环
+        backtrack_zj2(state, choices, res, i, target - choices[i]);
+        // 回溯
+        state.pop_back();
+    }
+}
+vector<vector<int>> subsetSumINaive2(vector<int>& nums, int target)
+{
+    vector<int> state;
+    sort(nums.begin(), nums.end());// 排序，防止重复子集
+    int start = 0;// 定义起始位置
+    vector<vector<int>> res;
+    backtrack_zj2(state, nums, res, start, target);
     return res;
 }
 
@@ -229,11 +267,17 @@ int main()
     vector<int> pl_nums1 = {1,2,3};
     vector<vector<int>> pl_res1 = permutations1(pl_nums1);
 
+    /*全排列Ⅱ：有重复元素*/
     vector<int> pl_nums2 = {1,3,2,3};
     vector<vector<int>> pl_res2 = permutations2(pl_nums2);
 
+    /*子集和Ⅰ：无重复元素*/
     vector<int> zj_nums1 = {3,4,5};
-    vector<vector<int>> zj_res1 = subsetSumINaive(zj_nums1, 9);
+    vector<vector<int>> zj_res1 = subsetSumINaive1(zj_nums1, 9);
+
+    /*子集和Ⅱ：有重复元素*/
+    vector<int> zj_nums2 = {4,4,5,3};
+    vector<vector<int>> zj_res2 = subsetSumINaive2(zj_nums2, 9);
 
     return 0;
 }

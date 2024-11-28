@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
+#include <windows.h>
 using namespace std;
 
 // 经典问题：给定一个共有 n 阶的楼梯，你每步可以上 1 阶或者 2 阶，请问有多少种方案可以爬到楼顶？
@@ -33,11 +34,12 @@ int minCostClimbingStairsDP(vector<int>& cost)
     return costB;
 }
 /*无后效性*/
-/*带约束爬楼梯*/
+/*带约束爬楼梯*/ // 对 K 神的解法进行空间优化
 int climbingStairsConstraintDP1(int n)
 {
     // dp(n) = onlyOnestep(dp(n-1)) + dp(n-2)
     // onlyOnestep(dp(n-1)) = dp(n-3)
+    // 所以dp(n) = dp(n-2) + dp(n-3)
     // dp(1) = 1, dp(2) = 1
     if(n == 1 || n == 2)
         return 1;
@@ -55,7 +57,7 @@ int climbingStairsConstraintDP1(int n)
     }
     return dpC;
 }
-/* 带约束爬楼梯：动态规划 */
+// K 神解法
 int climbingStairsConstraintDP2(int n) 
 {
     if (n == 1 || n == 2) {
@@ -78,10 +80,10 @@ int climbingStairsConstraintDP2(int n)
 
 int main()
 {
-    int steps1 = climbingStairsConstraintDP1(100);
+    int steps1 = climbingStairsConstraintDP1(500);
     cout << steps1 << endl;
 
-    int steps2 = climbingStairsConstraintDP2(100);
+    int steps2 = climbingStairsConstraintDP2(500);
     cout << steps2 << endl;
 
     return 0;

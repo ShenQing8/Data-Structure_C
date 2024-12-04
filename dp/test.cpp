@@ -188,33 +188,6 @@ int editDistanceDP(string s, string t)// s 转为 t 所需要的最小操作步�
     }
     return dp[m];
 }
-/* 编辑距离：空间优化后的动态规划 */
-// int editDistanceDPComp(string s, string t) 
-// {
-//     int n = s.length(), m = t.length();
-//     vector<int> dp(m + 1, 0);
-//     for (int j = 1; j <= m; j++) 
-//     {
-//         dp[j] = j;
-//     }
-//     for (int i = 1; i <= n; i++) 
-//     {
-//         int leftup = dp[0];
-//         dp[0] = i;
-//         for (int j = 1; j <= m; j++) 
-//         {
-//             int temp = dp[j];
-//             if (s[i - 1] == t[j - 1]) 
-//             {
-//                 dp[j] = leftup;
-//             } else {
-//                 dp[j] = min(min(dp[j - 1], dp[j]), leftup) + 1;
-//             }
-//             leftup = temp;
-//         }
-//     }
-//     return dp[m];
-// }
 
 
 int main()

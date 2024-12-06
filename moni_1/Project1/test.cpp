@@ -21,6 +21,8 @@ void test1()
 		if (j == i)
 			pre.emplace_back(j);
 	}
+	for(int i = 0; i < pre.size(); ++i)
+		cout << pre[i] << ' ';
 	for (int val : pre)
 	{
 		if (2024 % val == 0)
@@ -156,7 +158,7 @@ int test10(vector<int>& nums)
 
 int main()
 {
-	//test1();
+	test1();
 	//test2();
 	//test3();
 	//test4();

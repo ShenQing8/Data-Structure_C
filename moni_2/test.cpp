@@ -116,14 +116,10 @@ int test4() {
 void test5()
 {
     vector<int> nums = {534, 386, 319, 692, 169, 338, 521, 713, 640, 692, 969, 362, 311, 349, 308, 357, 515, 140, 591, 216,
-
-57, 252, 575, 630, 95, 274, 328, 614, 18, 605, 17, 980, 166, 112, 997, 37, 584, 64, 442, 495,
-
-821, 459, 453, 597, 187, 734, 827, 950, 679, 78, 769, 661, 452, 983, 356, 217, 394, 342, 697, 878,
-
-475, 250, 468, 33, 966, 742, 436, 343, 255, 944, 588, 734, 540, 508, 779, 881, 153, 928, 764, 703,
-
-459, 840, 949, 500, 648, 163, 547, 780, 749, 132, 546, 199, 701, 448, 265, 263, 87, 45, 828, 634};
+                        57, 252, 575, 630, 95, 274, 328, 614, 18, 605, 17, 980, 166, 112, 997, 37, 584, 64, 442, 495,
+                        821, 459, 453, 597, 187, 734, 827, 950, 679, 78, 769, 661, 452, 983, 356, 217, 394, 342, 697, 878,
+                        475, 250, 468, 33, 966, 742, 436, 343, 255, 944, 588, 734, 540, 508, 779, 881, 153, 928, 764, 703,
+                        459, 840, 949, 500, 648, 163, 547, 780, 749, 132, 546, 199, 701, 448, 265, 263, 87, 45, 828, 634};
     sort(nums.begin(), nums.end());
     int sum = 0;
     for(int i = 0; i < nums.size(); ++i)
@@ -143,13 +139,85 @@ void test6()
 
 void test7()
 {
+    int min_bin = INT_MAX;
     int n = 0;
     cin >> n;
     vector<int> nums(n, 0);
-    int i = 0;
-    while(cin >> nums[i])
-        ++i;
-    
+    for(int i = 0; i < n; ++i)
+    {
+        cin >> nums[i];
+        if(nums[i] % 2 == 0)
+            min_bin = min(min_bin, nums[i]);
+    }
+    cout << min_bin;
+}
+
+void test8()
+{
+    string flag = "LANQIAO";
+    string cur;
+    cin >> cur;
+    string cmp = "";
+    int j = 0;
+    for(int i = 0; i < cur.length(); ++i)
+    {
+        if(cur[i] == flag[j])
+        {
+            cmp.push_back(cur[i]);
+            ++j;
+        }
+    }
+    if(cmp == flag)
+        cout << "YES";
+    else
+    cout << "NO";
+}
+
+
+int calculateSum(vector<vector<int>>& nums, int x1, int y1, int x2, int y2)
+{
+    int sum = 0;
+    int i = x1;
+    int j = y1;
+    for(; i <= x2 && j <= y2; ++i, ++j)
+    {
+        // 左
+        sum += nums[i][y1];
+        // 右
+        sum += nums[i][y2];
+        // 上
+        sum += nums[x1][j];
+        // 下
+        sum += nums[x2][j];
+    }
+    // 减去四个角
+    sum -= nums[x1][y1];
+    sum -= nums[x1][y2];
+    sum -= nums[x2][y1];
+    sum -= nums[x2][y2];
+    return sum;
+} 
+void test9()
+{
+    int n = 0, m = 0;
+    cin >> n >> m;
+    vector<vector<int>> nums(n, vector<int>(m, 0));
+    for(int i = 0; i < n; ++i)
+        for(int j = 0; j < m; ++j)
+            cin >> nums[i][j];
+
+    int maxSum = -INT_MAX;  // 初始化最大和为一个较小值
+    for (int x1 = 0; x1 < n; x1++) {
+        for (int y1 = 0; y1 < m; y1++) {
+            for (int size = 1; x1 + size < n && y1 + size < m; size++) {
+                int x2 = x1 + size;
+                int y2 = y1 + size;
+                int curSum = calculateSum(nums, x1, y1, x2, y2);
+                maxSum = max(maxSum, curSum);
+            }
+        }
+    }
+    cout << maxSum << endl;
 }
 
 int main()
@@ -160,7 +228,9 @@ int main()
     //test4();
     //test5();
     //test6();
-    test7();
+    //test7();
+    //test8();
+    test9();
 
     return 0;
 }

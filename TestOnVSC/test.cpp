@@ -36,7 +36,7 @@ vector<int> getAverages(vector<int>& nums, int k)
     return ret;
 }
 
-/*单调栈*/
+#pragma region 单调栈
 class RegularStack
 {
 private:
@@ -44,7 +44,7 @@ private:
 public:
     RegularStack(/* args */);
     ~RegularStack();
-    // 1475
+    #pragma region 1475
     vector<int> finalPrices(vector<int>& prices) 
     {
         int n = prices.size();
@@ -62,6 +62,7 @@ public:
         }
         return ans;
     }
+    #pragma endregion
 
     #pragma region 853
     int carFleet(int target, vector<int>& position, vector<int>& speed) 
@@ -108,7 +109,56 @@ RegularStack::RegularStack(/* args */)
 RegularStack::~RegularStack()
 {
 }
+#pragma endregion
 
+#pragma region 网络图(DFS,BFS)
+#pragma region 面试题 16.19. 水域大小
+class WaterSquare
+{
+public:
+    vector<int> pondSizes(vector<vector<int>>& land) 
+    {
+        m = land.size();
+        n = land[0].size();
+        vector<int> water_num;
+        for(int i = 0; i < m; ++i)
+        {
+            for(int j = 0; j < n; ++j)
+            {
+                if(land[i][j] == 0)
+                {
+                    tmp = 0;
+                    dfs(land, i, j);
+                    water_num.push_back(tmp);
+                }
+            }
+        }
+        sort(water_num.begin(), water_num.end());
+        return water_num;
+
+    }
+    void dfs(vector<vector<int>>& land, int x, int y)
+    {
+        if(x < 0 || x >= m || y < 0 || y >= n || land[x][y] != 0)
+            return;
+        land[x][y] = 1;
+        ++tmp;
+        dfs(land, x, y - 1);
+        dfs(land, x, y + 1);
+        dfs(land, x - 1, y - 1);
+        dfs(land, x - 1, y + 1);
+        dfs(land, x + 1, y - 1);
+        dfs(land, x + 1, y + 1);
+        dfs(land, x - 1, y);
+        dfs(land, x + 1, y);
+    }
+    int m;
+    int n;
+    int tmp;
+};
+#pragma endregion
+
+#pragma endregion
 
 int main()
 {
@@ -117,17 +167,25 @@ int main()
     // vector<int> ret = getAverages(nums, 2);
 
     /*单调栈*/
-    RegularStack regular_stack = RegularStack();
+    //RegularStack regular_stack = RegularStack();
     // 1475
     // vector<int> prices = {8,4,6,2,3};
     // vector<int> ans = regular_stack.finalPrices(prices);
     // cout << ans << '\n';
     // cout << prices;
     // 853
-    vector<int> position = {10,8,0,5,3};
-    vector<int> speed = {2,4,1,1,3};
-    int target = 12;
-    cout << regular_stack.carFleet(target, position, speed) << endl;
+    // vector<int> position = {10,8,0,5,3};
+    // vector<int> speed = {2,4,1,1,3};
+    // int target = 12;
+    // cout << regular_stack.carFleet(target, position, speed) << endl;
+
+    /*网络图*/
+    // 面试题 16.19
+    WaterSquare wat;
+    vector<vector<int>> land =  {{0,2,1,0},{0,1,0,1},{1,1,0,1},{0,1,0,1}};
+    vector<int> ret = wat.pondSizes(land);
+    cout << ret << endl;
+
 
 
     // cout << __cplusplus << endl;

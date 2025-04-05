@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <algorithm>
+#include <limits>
+#include <stack>
 //#include <bits/stdc++.h>
 using namespace std;
 
@@ -218,7 +221,7 @@ public:
 };
 #pragma endregion
 
-#pragma region 成绩统计
+#pragma region 成绩统计（未成功）
 // 求平均数
 // 排序当前数组，并用 二分查找 找到最接近平均数的数
 // 从这个数开始 向两边遍历 ，取接近平均数的那个数作为下一个数
@@ -315,8 +318,78 @@ int ESolution(vector<int>& scor, int n, int k, int T)
 }
 #pragma endregion
 
+
+
+#pragma region 零食采购
+struct TreeNode_G
+{
+    int kind;
+    bool is_came = false;
+    vector<TreeNode_G*> sons;
+};
+
+bool dfs_g(TreeNode_G& root, TreeNode_G& target, vector<TreeNode_G*>& path)
+{
+    if(root.is_came)
+        return false;
+    // 记录路径
+    path.push_back(&root);
+    root.is_came = true;
+
+    if(&root == &target)
+    {
+        root.is_came = false;
+        return true;
+    }
+    
+    for(int i = 0; i < root.sons.size(); ++i)
+    {
+        if(dfs_g(*root.sons[i], target, path))
+        {
+            root.is_came = false;
+            return true;
+        }
+    }
+
+    // 删除路径
+    path.pop_back();
+    root.is_came = false;
+    
+    return false;
+}
+
+int LCA_G(TreeNode_G& root, TreeNode_G& n1, TreeNode_G& n2)
+{
+    vector<TreeNode_G*> path1, path2;
+    unordered_map<int, int> tmp;
+    // 找不到公共节点
+    if(!dfs_g(root, n1, path1) || !dfs_g(root, n2, path2))
+        return 0;
+
+    int i = 0;
+    for(i = 0; i < path1.size() && i < path2.size(); ++i)
+    {
+        if(!(path1[i] == path2[i]))
+            break;
+    }
+    int coparent_index = i - 1;
+
+    for(i = coparent_index; i < path1.size(); ++i)
+    {
+        ++tmp[path1[i]->kind];
+    }
+    for(i = coparent_index + 1; i < path2.size(); ++i)
+    {
+        ++tmp[path2[i]->kind];
+    }
+    
+    return tmp.size();
+}
+#pragma endregion
+
 int main()
 {
+    #pragma region 
     /*A*/
     // int bsk_days = BasketDays();
     // cout << bsk_days << endl;
@@ -335,13 +408,40 @@ int main()
     // cout << ddd.ans << endl;
 
     /*E*/
-    int n, k, T;
-    cin >> n >> k >> T;
-    vector<int> scor(n);
-    for(int i = 0; i < n; ++i)
-        cin >> scor[i];
-    int ans = ESolution(scor, n, k, T);
-    cout << ans;
+    // int n, k, T;
+    // cin >> n >> k >> T;
+    // vector<int> scor(n);
+    // for(int i = 0; i < n; ++i)
+    //     cin >> scor[i];
+    // int ans = ESolution(scor, n, k, T);
+    // cout << ans;
 
+    /*F*/
+#pragma endregion
+    /*G*/
+    int n,q;
+    int u,v;
+    cin >> n >> q;
+    vector<TreeNode_G> planets(n + 1);// 行星
+    vector<vector<int>> beg_end(q, vector<int>(2));// 起点和终点
+    for(int i = 1; i <= n; ++i)
+    {
+        cin >> planets[i].kind;
+    }
+    for(int i = 1; i < n; ++i)
+    {
+        cin >> u >> v;
+        planets[u].sons.emplace_back(&planets[v]);
+        planets[v].sons.emplace_back(&planets[u]);
+    }
+    for(int i = 0; i < q; ++i)
+    {
+        cin >> beg_end[i][0] >> beg_end[i][1];
+    }
+
+    for(int i = 0; i < q; ++i)
+    {
+        cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
+    }
     return 0;
 }

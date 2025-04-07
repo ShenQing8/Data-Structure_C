@@ -443,5 +443,7 @@ int main()
     {
         cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
     }
+
+    
     return 0;
 }

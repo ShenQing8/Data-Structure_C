@@ -1,4 +1,8 @@
 #include <iostream>
+#include <string>
+#include <vector>
+#include <stdlib.h>
+#include <string.h>
 using namespace std;
 
 #pragma region 幸运数
@@ -39,11 +43,59 @@ int Solution_A()
 }
 #pragma endregion
 
+
+#pragma region 更小的数
+long long Sloution_D(char* num, int n)
+{
+    // int n = num.size();
+    string tmp;
+    long long ans = 0;
+    int o,p;
+    for(int i = 0; i < n - 1; ++i)
+    {
+        for(int j = i + 1; j < n; ++j)
+        {
+            if(num[j] < num[i])
+                ++ans;
+            else if(num[j] == num[i])
+            {
+                o = i + 1;
+                p = j - 1;
+                while(o < p)
+                {
+                    if(num[p] < num[o])
+                    {
+                        ++ans;
+                        break;
+                    }
+                    else if(num[p] > num[i])
+                    {
+                        break;
+                    }
+                    ++o;
+                    --p;
+                }
+            }
+        }
+    }
+    return ans;
+}
+#pragma endregion
+
 int main()
 {
     /*A*/
-    cout << Solution_A() << '\n';
+    // cout << Solution_A() << '\n';
 
+
+
+    /*D*/
+    
+    // string num;
+    char num[5000];
+    scanf("%s", &num);
+    int n = strlen(num);
+    cout << Sloution_D(num, n);
 
     return 0;
 }

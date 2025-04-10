@@ -320,7 +320,7 @@ int ESolution(vector<int>& scor, int n, int k, int T)
 
 
 
-#pragma region 零食采购
+#pragma region 零食采购：离线算法
 struct TreeNode_G
 {
     int kind;
@@ -370,7 +370,7 @@ public:
     //
     //     return false;
     // }
-
+    
     unordered_map<TreeNode_G*, bool> vis;
     unordered_map<TreeNode_G*, TreeNode_G*> parent;
     vector<int> ans;
@@ -426,9 +426,69 @@ public:
 
 #pragma endregion
 
+#pragma region 零食采购：倍增算法
+int snacks[100005][21];
+int fa[100005][21];
+int dep[100005];
+vector<int> sons[100005];
+
+void dfs_beizeng(int s, int f)
+{
+    // 将从根节点到父节点能买到的零食都加到子结点上
+    for(int i = 1; i < 21; ++i)
+    {
+        snacks[s][i] += snacks[f][i];
+    }
+
+    dep[s] = dep[f] + 1;
+    fa[s][0] = f;
+    for(int i = 1; (1<<i) < dep[s] && i <= 20; ++i)
+    {
+        fa[s][i] = fa[ fa[s][i-1] ][i-1];// 找到s的2的i次方祖先
+    }
+
+    // 继续dfs
+    for(int i = 0; i < sons[s].size(); ++i)
+    {
+        if(sons[s][i] != f)// 因为建立了双向边
+        {
+            dfs_beizeng(sons[s][i], s);
+        }
+    }
+}
+
+int lca_beizeng(int u, int v)
+{
+    // 保证v的深度更大
+    if(dep[u] > dep[v])
+        swap(u, v);
+    // 将v的深度跳到和u一样
+    for(int i = 20; i >= 0; --i)
+    {
+        if(dep[fa[v][i]] >= dep[u])
+        {
+            v = fa[v][i];
+        }
+    }
+    // 若为相同节点，则直接返回
+    if(u == v)
+        return u;
+    // 找到lca的子节点
+    for(int i = 20; i >= 0; --i)
+    {
+        if(fa[u][i] != fa[v][i])
+        {
+            u = fa[u][i];
+            v = fa[u][i];
+        }
+    }
+    return fa[u][0];
+}
+#pragma endregion
+
 int main()
 {
-    #pragma region 
+#pragma region 
     /*A*/
     // int bsk_days = BasketDays();
     // cout << bsk_days << endl;
@@ -457,41 +517,78 @@ int main()
 
     /*F*/
 #pragma endregion
-    /*G*/
-    LCA lca;
-    int n,q;
-    int u,v;
+    /*G : 离线算法*/
+    // LCA lca;
+    // int n,q;
+    // int u,v;
+    // cin >> n >> q;
+    // vector<TreeNode_G> planets(n + 1);// 行星
+    // lca.ans = vector<int>(q, 0);
+    // unordered_map<TreeNode_G*, pair<vector<TreeNode_G*>, int>> beg_end;// 起点和终点
+    // for(int i = 1; i <= n; ++i)
+    // {
+    //     cin >> planets[i].kind;
+    //     lca.vis[&planets[i]] = false;
+    // }
+    // for(int i = 1; i < n; ++i)
+    // {
+    //     cin >> u >> v;
+    //     planets[u].sons.emplace_back(&planets[v]);
+    //     planets[v].sons.emplace_back(&planets[u]);
+    // }
+    // for(int i = 0; i < q; ++i)
+    // {
+    //     cin >> u >> v;
+    //     beg_end[&planets[u]].first.emplace_back(&planets[v]);
+    //     beg_end[&planets[u]].second = i;
+    //
+    //     beg_end[&planets[v]].first.emplace_back(&planets[u]);
+    //     beg_end[&planets[u]].second = i;
+    // }
+    //
+    // // for(int i = 0; i < q; ++i)
+    // // {
+    // //     cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
+    // // }
+    // lca.LCA_G(&planets[1], beg_end);
+
+    /*G : 倍增算法*/
+
+    /*G : 倍增算法*/
+    int n, q;
+    int x, u, v;
+    int ans = 0;
     cin >> n >> q;
-    vector<TreeNode_G> planets(n + 1);// 行星
-    lca.ans = vector<int>(q, 0);
-    unordered_map<TreeNode_G*, pair<vector<TreeNode_G*>, int>> beg_end;// 起点和终点
     for(int i = 1; i <= n; ++i)
     {
-        cin >> planets[i].kind;
-        lca.vis[&planets[i]] = false;
+        cin >> x;
+        snacks[i][x] = 1;
     }
     for(int i = 1; i < n; ++i)
     {
         cin >> u >> v;
-        planets[u].sons.emplace_back(&planets[v]);
-        planets[v].sons.emplace_back(&planets[u]);
+        sons[u].emplace_back(v);
+        sons[v].emplace_back(u);
     }
-    for(int i = 0; i < q; ++i)
+
+    // 初始化
+    dfs_beizeng(1, 0);
+
+    while(q > 0)
     {
         cin >> u >> v;
-        beg_end[&planets[u]].first.emplace_back(&planets[v]);
-        beg_end[&planets[u]].second = i;
-
-        beg_end[&planets[v]].first.emplace_back(&planets[u]);
-        beg_end[&planets[u]].second = i;
+        // 最短线路能买到的零食数量最多 = 从根节点到u节点能买到的数量 + 从根节点到v节点能买到的数量
+        //                            - 从根节点到lca能买到的数量 - 从根节点到lca的父节点能买到的数量
+        int sotest = lca_beizeng(u, v);
+        for(int i = 1; i <= 20; ++i)
+        {
+            if(snacks[u][i] + snacks[v][i] - snacks[sotest][i] - snacks[fa[sotest][0]][i])
+                ++ans;
+        }
+        cout << ans << '\n';
+        ans = 0;
+        --q;
     }
-
-    // for(int i = 0; i < q; ++i)
-    // {
-    //     cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
-    // }
-    lca.LCA_G(&planets[1], beg_end);
-
     
     return 0;
 }

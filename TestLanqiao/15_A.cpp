@@ -328,63 +328,102 @@ struct TreeNode_G
     vector<TreeNode_G*> sons;
 };
 
-bool dfs_g(TreeNode_G& root, TreeNode_G& target, vector<TreeNode_G*>& path)
+class LCA
 {
-    if(root.is_came)
-        return false;
-    // 记录路径
-    path.push_back(&root);
-    root.is_came = true;
-
-    if(&root == &target)
+    TreeNode_G* find(TreeNode_G* u)
     {
-        root.is_came = false;
-        return true;
+        if(u == parent[u])
+            return u;
+        return find(u);
     }
-    
-    for(int i = 0; i < root.sons.size(); ++i)
+    void marge(TreeNode_G* u, TreeNode_G* v)
     {
-        if(dfs_g(*root.sons[i], target, path))
+        parent[v] = u;
+    }
+public:
+    // bool dfs_g(TreeNode_G& root, TreeNode_G& target, vector<TreeNode_G*>& path)
+    // {
+    //     if(root.is_came)
+    //         return false;
+    //     // 记录路径
+    //     path.push_back(&root);
+    //     root.is_came = true;
+    //
+    //     if(&root == &target)
+    //     {
+    //         root.is_came = false;
+    //         return true;
+    //     }
+    //
+    //     for(int i = 0; i < root.sons.size(); ++i)
+    //     {
+    //         if(dfs_g(*root.sons[i], target, path))
+    //         {
+    //             root.is_came = false;
+    //             return true;
+    //         }
+    //     }
+    //
+    //     // 删除路径
+    //     path.pop_back();
+    //     root.is_came = false;
+    //
+    //     return false;
+    // }
+
+    unordered_map<TreeNode_G*, bool> vis;
+    unordered_map<TreeNode_G*, TreeNode_G*> parent;
+    vector<int> ans;
+
+    int LCA_G(TreeNode_G* root, unordered_map<TreeNode_G*, pair<vector<TreeNode_G*>, int>>& beg_end)
+    {
+        parent[root] = root;// 将父节点设为自己
+        vis[root] = true;// 记录已访问
+
+        for(TreeNode_G* v : root->sons)
         {
-            root.is_came = false;
-            return true;
+            if(!v->is_came)
+            {
+                LCA_G(v, beg_end);
+                marge(root, v);
+            }
         }
-    }
 
-    // 删除路径
-    path.pop_back();
-    root.is_came = false;
-    
-    return false;
-}
-
-int LCA_G(TreeNode_G& root, TreeNode_G& n1, TreeNode_G& n2)
-{
-    vector<TreeNode_G*> path1, path2;
-    unordered_map<int, int> tmp;
-    // 找不到公共节点
-    if(!dfs_g(root, n1, path1) || !dfs_g(root, n2, path2))
-        return 0;
-
-    int i = 0;
-    for(i = 0; i < path1.size() && i < path2.size(); ++i)
-    {
-        if(!(path1[i] == path2[i]))
-            break;
+        for(TreeNode_G* v : beg_end[root].first)
+        {
+            if(v->is_came)
+            {
+                cout << find(v)->kind;
+            }
+        }
+        
+        // vector<TreeNode_G*> path1, path2;
+        // unordered_map<int, int> tmp;
+        // // 找不到公共节点
+        // if(!dfs_g(root, n1, path1) || !dfs_g(root, n2, path2))
+        //     return 0;
+        //
+        // int i = 0;
+        // for(i = 0; i < path1.size() && i < path2.size(); ++i)
+        // {
+        //     if(!(path1[i] == path2[i]))
+        //         break;
+        // }
+        // int coparent_index = i - 1;
+        //
+        // for(i = coparent_index; i < path1.size(); ++i)
+        // {
+        //     ++tmp[path1[i]->kind];
+        // }
+        // for(i = coparent_index + 1; i < path2.size(); ++i)
+        // {
+        //     ++tmp[path2[i]->kind];
+        // }
+        //
+        // return tmp.size();
     }
-    int coparent_index = i - 1;
+};
 
-    for(i = coparent_index; i < path1.size(); ++i)
-    {
-        ++tmp[path1[i]->kind];
-    }
-    for(i = coparent_index + 1; i < path2.size(); ++i)
-    {
-        ++tmp[path2[i]->kind];
-    }
-    
-    return tmp.size();
-}
 #pragma endregion
 
 int main()
@@ -419,14 +458,17 @@ int main()
     /*F*/
 #pragma endregion
     /*G*/
+    LCA lca;
     int n,q;
     int u,v;
     cin >> n >> q;
     vector<TreeNode_G> planets(n + 1);// 行星
-    vector<vector<int>> beg_end(q, vector<int>(2));// 起点和终点
+    lca.ans = vector<int>(q, 0);
+    unordered_map<TreeNode_G*, pair<vector<TreeNode_G*>, int>> beg_end;// 起点和终点
     for(int i = 1; i <= n; ++i)
     {
         cin >> planets[i].kind;
+        lca.vis[&planets[i]] = false;
     }
     for(int i = 1; i < n; ++i)
     {
@@ -436,13 +478,19 @@ int main()
     }
     for(int i = 0; i < q; ++i)
     {
-        cin >> beg_end[i][0] >> beg_end[i][1];
+        cin >> u >> v;
+        beg_end[&planets[u]].first.emplace_back(&planets[v]);
+        beg_end[&planets[u]].second = i;
+
+        beg_end[&planets[v]].first.emplace_back(&planets[u]);
+        beg_end[&planets[u]].second = i;
     }
 
-    for(int i = 0; i < q; ++i)
-    {
-        cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
-    }
+    // for(int i = 0; i < q; ++i)
+    // {
+    //     cout << LCA_G(planets[1], planets[beg_end[i][0]], planets[beg_end[i][1]]) << '\n';
+    // }
+    lca.LCA_G(&planets[1], beg_end);
 
     
     return 0;

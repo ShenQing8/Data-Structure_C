@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <stdlib.h>
 #include <string.h>
 using namespace std;
@@ -48,7 +49,6 @@ int Solution_A()
 long long Sloution_D(char* num, int n)
 {
     // int n = num.size();
-    string tmp;
     long long ans = 0;
     int o,p;
     for(int i = 0; i < n - 1; ++i)
@@ -82,6 +82,20 @@ long long Sloution_D(char* num, int n)
 }
 #pragma endregion
 
+#pragma region 买瓜
+int ans_f = 40;
+void dfs_f(double m, double* malons, int i, double ml, int ans)
+{
+    if(i < 1 || ml > m || ans >= ans_f)
+        return;
+    if(ml == m)
+        ans_f = min(ans_f, ans);
+    dfs_f(m - ml, malons, i - 1, malons[i - 1], ans);
+    dfs_f(m - ml, malons, i - 1, malons[i - 1] / 2, ans + 1);
+    dfs_f(m - ml, malons, i - 1, 0, ans);
+}
+#pragma endregion
+
 int main()
 {
     /*A*/
@@ -90,12 +104,28 @@ int main()
 
 
     /*D*/
-    
-    // string num;
-    char num[5000];
-    scanf("%s", &num);
-    int n = strlen(num);
-    cout << Sloution_D(num, n);
+    // char num[5000];
+    // scanf("%s", &num);
+    // int n = strlen(num);
+    // cout << Sloution_D(num, n);
+
+    /*F*/
+    double malons[35];
+    int n;
+    double m;
+    cin >> n >> m;
+    for(int i = 1; i <= n; ++i)
+    {
+        cin >> malons[i];
+    }
+    sort(malons + 1, malons + n + 1);
+    dfs_f(m, malons, n, malons[n], 0);
+    dfs_f(m, malons, n, malons[n] / 2, 1);
+    dfs_f(m, malons, n, 0.0, 0);
+    if(ans_f == 40)
+        cout << -1;
+    else
+        cout << ans_f;
 
     return 0;
 }

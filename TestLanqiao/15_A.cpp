@@ -479,7 +479,7 @@ int lca_beizeng(int u, int v)
         if(fa[u][i] != fa[v][i])
         {
             u = fa[u][i];
-            v = fa[u][i];
+            v = fa[v][i];
         }
     }
     return fa[u][0];
@@ -574,7 +574,7 @@ int main()
     // 初始化
     dfs_beizeng(1, 0);
 
-    while(q > 0)
+    while(q--)
     {
         cin >> u >> v;
         // 最短线路能买到的零食数量最多 = 从根节点到u节点能买到的数量 + 从根节点到v节点能买到的数量
@@ -587,7 +587,6 @@ int main()
         }
         cout << ans << '\n';
         ans = 0;
-        --q;
     }
     
     return 0;
